@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Movie Review App</title>
+  <style>
+    /* CSS styles for the movie review app */
+    .movie {
+      display: flex;
+      margin-bottom: 20px;
+    }
+
+    .movie img {
+      width: 100px;
+      height: 150px;
+      margin-right: 10px;
+    }
+
+    .movie .movie-details {
+      flex: 1;
+    }
+
+    .movie .movie-details h2 {
+      margin: 0;
+    }
+
+    .movie .movie-details p {
+      margin: 5px 0;
+    }
+
+    .stars span {
+      color: gold;
+      cursor: pointer;
+    }
+
+    .review-form textarea {
+      width: 100%;
+      height: 80px;
+      margin-bottom: 10px;
+    }
+
+    .review-form input[type="submit"] {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="movie-list">
+    <!-- MovieList component will be populated here -->
+  </div>
+
+  <script>
+    // JavaScript code for the movie review app
+    // Define movie data
+    const movies = [
+      {
+        title: "Movie 1",
+        image: "movie1.jpg",
+        synopsis: "Synopsis of Movie 1",
+        rating: 3,
+        reviews: []
+      },
+      {
+        title: "Movie 2",
+        image: "movie2.jpg",
+        synopsis: "Synopsis of Movie 2",
+        rating: 4,
+        reviews: []
+      }
+      // Add more movies here
+    ];
+
+    // Render the movie list
+    const movieListElement = document.getElementById("movie-list");
+
+    movies.forEach((movie) => {
+      const movieElement = document.createElement("div");
+      movieElement.classList.add("movie");
+
+      movieElement.innerHTML = `
+        <img src="${movie.image}" alt="${movie.title}">
+        <div class="movie-details">
+          <h2>${movie.title}</h2>
+          <p>${movie.synopsis}</p>
+          <div class="stars">${renderStars(movie.rating)}</div>
+          <div class="review-list"></div>
+          <div class="review-form">
+            <textarea placeholder="Leave a review"></textarea>
+            <input type="submit" value="Submit" onclick="submitReview(this, ${movies.indexOf(movie)})">
+          </div>
+        </div>
+      `;
+
+      movieListElement.appendChild(movieElement);
+    });
+
+    // Render stars based on rating
+    function renderStars(rating) {
+      let stars = "";
+      for (let i = 1; i <= 5; i++) {
+        if (i <= rating) {
+          stars += `<span onclick="rateMovie(this, ${rating})">&#9733;</span>`;
+        } else {
+          stars += `<span onclick="rateMovie(this, ${rating})">&#9734;</span>`;
+        }
+      }
+      return stars;
+    }
+
+    // Function to rate a movie
+    function rateMovie(starElement, rating) {
+      const stars = starElement.parentNode.querySelectorAll("span");
+      stars.forEach((star, index) => {
+        if (index < rating) {
+          star.innerHTML = "&#9733;";
+        } else {
+          star.innerHTML = "&#9734;";
+        }
+      });
+    }
+
+    // Function to submit a review
+    function submitReview(buttonElement, movieIndex) {
+      const reviewForm = buttonElement.parentNode;
+      const textarea = reviewForm.querySelector("textarea");
+      const reviewList = reviewForm.parentNode.querySelector(".review-list");
+
+const review = textarea.value;
+if (review) {
+  movies[movieIndex].reviews.push(review);
+
+  const reviewElement = document.createElement("div");
+  reviewElement.classList.add("review");
+  reviewElement.textContent = review;
+
+  reviewList.appendChild(reviewElement);
+
+  textarea.value = "";
+}
+}
+</script>
+</body>
+</html>
+      
